@@ -44,7 +44,7 @@ def sample_pagerank(corpus, damping_factor, n):
         new_pr[page] = new_pr.get(page, 0) + 1
         pr = transition_model(corpus, page, damping_factor)
     for item in new_pr:
-        item = item/n
+        new_pr[item] = new_pr[item]/n
     
     return new_pr
 
