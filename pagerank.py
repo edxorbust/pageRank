@@ -60,12 +60,18 @@ def transition_model(corpus, page, damping_factor):
     pr = dict()
     number_of_pages = len(corpus)
     number_of_links = len(corpus[page])
-    links_of_page = corpus[page]
 
-    pr[page] = (1-damping_factor)/number_of_pages
+    if number_of_links != 0:
+        links_of_page = corpus[page]
+        pr[page] = (1-damping_factor)/number_of_pages
 
-    for i in links_of_page:
-        pr[i] = (damping_factor/number_of_links) + pr[page]
+        for i in links_of_page:
+            pr[i] = (damping_factor/number_of_links) + pr[page]
+        
+        return pr
+    
+    for i in corpus:
+        pr[i] = 1/number_of_pages
     
     return pr
 
