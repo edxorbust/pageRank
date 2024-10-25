@@ -67,7 +67,7 @@ def transition_model(corpus, page, damping_factor):
         pr[page] = (1-damping_factor)/number_of_pages
 
         for i in links_of_page:
-            pr[i] = (damping_factor/number_of_links) + pr[page]
+            pr[i] = (damping_factor/number_of_links) + (1-damping_factor)/number_of_pages
         
         return pr
     
