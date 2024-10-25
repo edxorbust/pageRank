@@ -1,3 +1,4 @@
+import random
 def transition_model(corpus, page, damping_factor):
     """
     Return a probability distribution over which page to visit next,
@@ -16,7 +17,7 @@ def transition_model(corpus, page, damping_factor):
         pr[page] = (1-damping_factor)/number_of_pages
 
         for i in links_of_page:
-            pr[i] = (damping_factor/number_of_links) + pr[page]
+            pr[i] = (damping_factor/number_of_links) + (1-damping_factor)/number_of_pages
         
         return pr
     
@@ -48,6 +49,8 @@ def sample_pagerank(corpus, damping_factor, n):
     
     return new_pr
 
-corpus = {a:{a,b,c}, b:{a,c}, c:{d}, d:{a,b}}
+corpus = {'1': {'2'}, '2': {'3', '1'}, '3': {'4', '2'}, '4': {'2'}, '5': {'6'}, '6': {'5', '7'}, '7': {'6', '8'}, '8': {'6'}}
 damping_factor = 0.85
 n = 1000
+
+print(sample_pagerank)
