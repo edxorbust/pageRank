@@ -101,16 +101,19 @@ def sample_pagerank(corpus, damping_factor, n):
 
 
 def linksto_page(corpus, page):
-    links = dict()
+    links = set()
     for item in corpus:
+        if page in corpus[item]:
+                links.add(item)
+    return links
 
+def converged(old_pr, new_pr):
+    diff = 0.001
+    for page in old_pr:
+        if abs(old_pr[page] - new_pr[page]) > diff:
+            return False
+    return True
 
-
-        if len(corpus[item]) != 0:
-            if page in corpus[item]:
-                links.setdefault(page, set()).add(item)
-        else:
-            links.setdefault(page, set()).add(item)
 
 def iterate_pagerank(corpus, damping_factor):
     """
@@ -121,10 +124,19 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    pr = dict()
+    old_pr = dict()
     new_pr = dict()
+    N = len(corpus)
     for item in corpus:
-        pr[item] = 1/len(corpus)
+        old_pr[item] = 1/N
+    
+    for page in old_pr:
+        links = linksto_page(corpus,page)
+        links_total_pr = 0
+        for i in links:
+            links_total_pr+= old_pr[i]
+
+        new_pr[page] = (1-d)/N + damping_factor * (links_total_pr/len(links))
     
     
 
