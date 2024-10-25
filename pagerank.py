@@ -98,14 +98,17 @@ def sample_pagerank(corpus, damping_factor, n):
         new_pr[item] = new_pr[item]/n
     
     return new_pr
-        
 
 
 def linksto_page(corpus, page):
     links = set()
     for item in corpus:
-        if page in corpus[item]:
+        if len(corpus[item]) != 0:
+            if page in corpus[item]:
                 links.add(item)
+        else:
+            links.add(item)
+
     return links
 
 def converged(old_pr, new_pr):
@@ -114,6 +117,7 @@ def converged(old_pr, new_pr):
         if abs(old_pr[page] - new_pr[page]) > diff:
             return False
     return True
+
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -136,14 +140,17 @@ def iterate_pagerank(corpus, damping_factor):
         old_pr = copy.deepcopy(pr)
         for page in old_pr:
             links = linksto_page(corpus,page)
-            links_total_pr = 0
+            links_total = 0
             for i in links:
-                links_total_pr+= old_pr[i]
-
-            pr[page] = (1-damping_factor)/N + damping_factor * (links_total_pr/len(links))
+                if len(corpus[i]) == 0:
+                    links_total+= (old_pr[i]/N)
+                else:
+                    links_total+= (old_pr[i]/len(corpus[i]))
+            pr[page] = (1-damping_factor)/N + damping_factor * links_total
         has_converged = converged(old_pr, pr)
-    return pr
     
+    return pr
+
 
 
 if __name__ == "__main__":
