@@ -140,7 +140,7 @@ def iterate_pagerank(corpus, damping_factor):
             for i in links:
                 links_total_pr+= old_pr[i]
 
-            pr[page] = (1-d)/N + damping_factor * (links_total_pr/len(links))
+            pr[page] = (1-damping_factor)/N + damping_factor * (links_total_pr/len(links))
         has_converged = converged(old_pr, pr)
     return pr
     
