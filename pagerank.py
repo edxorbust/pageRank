@@ -2,6 +2,7 @@ import os
 import random
 import re
 import sys
+import copy
 
 DAMPING = 0.85
 SAMPLES = 10000
@@ -124,20 +125,24 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    old_pr = dict()
-    new_pr = dict()
+    pr = dict()
     N = len(corpus)
-    for item in corpus:
-        old_pr[item] = 1/N
-    
-    for page in old_pr:
-        links = linksto_page(corpus,page)
-        links_total_pr = 0
-        for i in links:
-            links_total_pr+= old_pr[i]
+    has_converged = False
 
-        new_pr[page] = (1-d)/N + damping_factor * (links_total_pr/len(links))
+    for item in corpus:
+        pr[item] = 1/N
     
+    while not has_converged:
+        old_pr = copy.deepcopy(pr)
+        for page in old_pr:
+            links = linksto_page(corpus,page)
+            links_total_pr = 0
+            for i in links:
+                links_total_pr+= old_pr[i]
+
+            pr[page] = (1-d)/N + damping_factor * (links_total_pr/len(links))
+        has_converged = converged(old_pr, pr)
+    return pr
     
 
 
